@@ -79,6 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,14 +88,18 @@
 
         <Button
             android:id="@+id/button3"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#FFC107"
             android:onClick="onGetStartedPressed"
+            android:padding="15dp"
             android:text="Get Started"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:cornerRadius="50dp"
+            app:iconTint="#FFFFFF" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

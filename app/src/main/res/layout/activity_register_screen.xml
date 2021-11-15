@@ -92,6 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,13 +100,17 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#FFC107"
             android:onClick="getOtpButtonClicked"
+            android:padding="15dp"
             android:text="Get OTP"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:cornerRadius="50dp"
+            app:icon="@drawable/icon_key"
+            app:iconTint="@color/black" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
