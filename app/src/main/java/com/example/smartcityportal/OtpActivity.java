@@ -1,0 +1,89 @@
+package com.example.smartcityportal;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+
+public class OtpActivity extends AppCompatActivity {
+
+    boolean resendOtpAllowed = false;
+    TextView resendOtpTextView;
+    TextView timerTextView;
+    CountDownTimer countDownTimer;
+    TextInputEditText emailOtpTextInputEditText;
+    TextInputEditText smsOtpTextInputEditText;
+
+    public void otpConfirmedClicked (View view) {
+        if (emailOtpTextInputEditText.getText().toString().equals("") || smsOtpTextInputEditText.getText().toString().equals("")) {
+            showCustomSnackBar(view, "All fields are mandatory.");
+        }
+    }
+
+    // This method avoids multiple SnackBars showing if one is currently being displayed
+    public void showCustomSnackBar (View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+        snackbar.setAction("Got it", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+    }
+
+    public void resendOtpClicked (View view) {
+        if (!resendOtpAllowed) {
+            showCustomSnackBar(resendOtpTextView, "Please wait till timer expires.");
+        }
+        else {
+            startCounter();
+            showCustomSnackBar(resendOtpTextView, "OTP Resent.");
+            resendOtpAllowed = false;
+        }
+    }
+
+    public void startCounter () {
+        countDownTimer = new CountDownTimer(30000, 1000) {
+            @Override
+            public void onTick(long l) {
+                updateTimer((int) l / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                showCustomSnackBar(timerTextView, "Did not recieve OTP? Tap on Resend");
+                countDownTimer.cancel();
+                resendOtpAllowed = true;
+            }
+        }.start();
+    }
+
+    public void updateTimer(int secondsLeft) {
+        int minutes = secondsLeft/60;
+        int seconds = secondsLeft - (minutes*60);
+        String secondStrings =Integer.toString(seconds);
+        if (0 <= Integer.parseInt(secondStrings) && Integer.parseInt(secondStrings) < 10)
+            secondStrings = "0" + secondStrings;
+        timerTextView.setText("Wait: " + minutes + ":" + secondStrings);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_otp);
+        getSupportActionBar().hide();
+
+        resendOtpTextView = findViewById(R.id.resendOtpTextView);
+        timerTextView = findViewById(R.id.timerTextView);
+        emailOtpTextInputEditText = findViewById(R.id.emailOtpTextInputEditText);
+        smsOtpTextInputEditText = findViewById(R.id.smsOtpTextInputEditText);
+
+        startCounter();
+    }
+}

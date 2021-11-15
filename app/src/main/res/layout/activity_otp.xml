@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_500"
-    tools:context=".RegisterScreenActivity">
+    tools:context=".OtpActivity">
 
     <ScrollView
-        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -23,47 +22,47 @@
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/merriweather"
-                android:text="First, let's verify your identity"
+                android:text="Check your Email and SMS Inbox"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="20dp"
-                android:text="Please enter your Email Address"
+                android:text="Enter the OTP you recieved by Email"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailTextField"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
+                android:layout_height="match_parent"
+                android:hint="Email OTP"
                 app:startIconDrawable="@drawable/icon_email"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailTextInputEditText"
+                    android:id="@+id/emailOtpTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="20dp"
-                android:text="Please enter your Phone Number"
+                android:text="Enter the OTP you recieved via SMS"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -71,18 +70,47 @@
                 android:id="@+id/phoneTextField"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Phone Number"
+                android:hint="SMS OTP"
+                app:counterMaxLength="10"
                 app:startIconDrawable="@drawable/icon_phone"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneTextInputEditText"
+                    android:id="@+id/smsOtpTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="10" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Did not Recieve OTP?"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/timerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Wait:"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/resendOtpTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="resendOtpClicked"
+                android:text="Resend OTP"
+                android:textAlignment="center"
+                android:textColor="#FFCDD2"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>
@@ -104,8 +132,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#FFC107"
-            android:onClick="getOtpButtonClicked"
-            android:text="Get OTP"
+            android:onClick="otpConfirmedClicked"
+            android:text="Confirm and Proceed"
+            android:textAllCaps="false"
             android:textColor="@color/black" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
