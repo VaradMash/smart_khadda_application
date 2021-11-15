@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "187152914207",
+    "project_id": "smartcityportal-4a235",
+    "storage_bucket": "smartcityportal-4a235.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187152914207:android:aba4a00f3963c9b10d422a",
+        "android_client_info": {
+          "package_name": "com.example.smartcityportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187152914207-ttj6aa5btkqarnf8tnpcgdaaj4jgqbci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQqSblETTc0Y9TSmXW15IguCWOxnzG6FU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187152914207-ttj6aa5btkqarnf8tnpcgdaaj4jgqbci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

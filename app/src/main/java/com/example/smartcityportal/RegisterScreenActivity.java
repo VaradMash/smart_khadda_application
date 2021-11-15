@@ -8,9 +8,11 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterScreenActivity extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
     TextInputEditText usernameTextInputEditText;
     TextInputEditText emailTextInputEditText;
     TextInputEditText phoneTextInputEditText;
@@ -28,17 +30,22 @@ public class RegisterScreenActivity extends AppCompatActivity {
     }
 
     public void getOtpButtonClicked (View view) {
-        if (emailTextInputEditText.getText().toString().equals("") || phoneTextInputEditText.getText().toString().equals("")) {
+        String phoneNumber = phoneTextInputEditText.getText().toString();
+        String emailAddress = emailTextInputEditText.getText().toString();
+        if (emailAddress.equals("") || phoneNumber.equals("")) {
             showCustomSnackBar(view, "All fields are mandatory.");
         }
-        else if (phoneTextInputEditText.getText().toString().length() != 10) {
+        else if (phoneNumber.length() != 10) {
             showCustomSnackBar(view, "Enter a valid phone number.");
         }
-        else if (!emailTextInputEditText.getText().toString().contains("@")) {
+        else if (!emailAddress.contains("@")) {
             showCustomSnackBar(view, "Enter a valid Email Id");
         }
         else {
+            phoneNumber = "+91" + phoneNumber;
             Intent intent = new Intent(getApplicationContext(), OtpActivity.class);
+            intent.putExtra("phone", phoneNumber);
+            intent.putExtra("email", emailAddress);
             startActivity(intent);
         }
     }
