@@ -11,6 +11,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class RegisterScreenActivity extends AppCompatActivity {
 
+    TextInputEditText usernameTextInputEditText;
     TextInputEditText emailTextInputEditText;
     TextInputEditText phoneTextInputEditText;
 
@@ -49,6 +50,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
+        usernameTextInputEditText = findViewById(R.id.usernameTextInputEditText);
         emailTextInputEditText = findViewById(R.id.emailTextInputEditText);
         phoneTextInputEditText = findViewById(R.id.phoneTextInputEditText);
 
