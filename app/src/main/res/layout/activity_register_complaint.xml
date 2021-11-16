@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_500"
-    tools:context=".RegisterScreenActivity">
+    tools:context=".RegisterComplaintActivity">
 
     <ScrollView
-        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,87 +22,95 @@
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/merriweather"
-                android:text="First, let's verify your identity"
+                android:text="Register Complaint"
+                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
 
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:backgroundTint="#FFECB3"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:cornerRadius="30dp"
+                app:icon="@drawable/icon_camera"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="35dp"
+                app:iconTint="@color/black" />
+
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Upload Photo"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/locationTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Please Enter your Full Name"
+                android:layout_marginBottom="5dp"
+                android:text="Location"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/usernameTextField"
+                android:id="@+id/locationTextField"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Full Name"
-                app:startIconDrawable="@drawable/icon_person"
+                android:hint="Location"
+                app:counterMaxLength="10"
+                app:startIconDrawable="@drawable/icon_location"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/usernameTextInputEditText"
+                    android:id="@+id/locationTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView13"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Please enter your Email Address"
+                android:layout_marginBottom="5dp"
+                android:text="Description"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                app:startIconDrawable="@drawable/icon_email"
-                app:startIconTint="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:text="Please enter your Phone Number"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phoneTextField"
+                android:id="@+id/descriptionTextField"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Phone Number"
-                app:startIconDrawable="@drawable/icon_phone"
+                android:hint="Description"
+                app:counterMaxLength="10"
+                app:startIconDrawable="@drawable/icon_description"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneTextInputEditText"
+                    android:id="@+id/descriptionTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="10" />
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,7 +118,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -122,18 +129,18 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#FFC107"
-            android:onClick="getOtpButtonClicked"
             android:padding="15dp"
-            android:text="Get OTP"
+            android:text="Submit Complaint"
+            android:textAllCaps="false"
             android:textColor="@color/black"
             app:cornerRadius="50dp"
-            app:icon="@drawable/icon_key"
+            app:icon="@drawable/icon_upload"
             app:iconTint="@color/black" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/myProfileMenuItem"
+        android:title="My Profile" />
+    <item
+        android:id="@+id/myComplaintsMenuItem"
+        android:title="My Complaints" />
+    <item
+        android:id="@+id/logOutMenuItem"
+        android:title="Log Out" />
+</menu>

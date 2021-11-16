@@ -1,0 +1,4 @@
+List of TinyDB Keys:
+1. userName : String : Stores Username of User
+2. userEmail : String : Stores email of User
+3. userPhoneNumber : String : Stores the Phone Number of the user

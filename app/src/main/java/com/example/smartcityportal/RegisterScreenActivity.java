@@ -10,12 +10,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class RegisterScreenActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     TextInputEditText usernameTextInputEditText;
     TextInputEditText emailTextInputEditText;
     TextInputEditText phoneTextInputEditText;
+    TinyDB tinyDB;
 
     // This method avoids multiple SnackBars showing if one is currently being displayed
     public void showCustomSnackBar (View view, String message) {
@@ -32,7 +35,9 @@ public class RegisterScreenActivity extends AppCompatActivity {
     public void getOtpButtonClicked (View view) {
         String phoneNumber = phoneTextInputEditText.getText().toString();
         String emailAddress = emailTextInputEditText.getText().toString();
-        if (emailAddress.equals("") || phoneNumber.equals("")) {
+        if (Objects.requireNonNull(emailTextInputEditText.getText()).toString().equals("") ||
+                Objects.requireNonNull(phoneTextInputEditText.getText()).toString().equals("") ||
+                Objects.requireNonNull(usernameTextInputEditText.getText()).toString().equals("")) {
             showCustomSnackBar(view, "All fields are mandatory.");
         }
         else if (phoneNumber.length() != 10) {
@@ -43,6 +48,9 @@ public class RegisterScreenActivity extends AppCompatActivity {
         }
         else {
             phoneNumber = "+91" + phoneNumber;
+            tinyDB.putString("userName", usernameTextInputEditText.getText().toString());
+            tinyDB.putString("userEmail", emailTextInputEditText.getText().toString());
+            tinyDB.putString("userPhoneNumber", phoneTextInputEditText.getText().toString());
             Intent intent = new Intent(getApplicationContext(), OtpActivity.class);
             intent.putExtra("phone", phoneNumber);
             intent.putExtra("email", emailAddress);
@@ -56,6 +64,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_screen);
 
         getSupportActionBar().hide();
+        tinyDB = new TinyDB(getApplicationContext());
 
         usernameTextInputEditText = findViewById(R.id.usernameTextInputEditText);
         emailTextInputEditText = findViewById(R.id.emailTextInputEditText);

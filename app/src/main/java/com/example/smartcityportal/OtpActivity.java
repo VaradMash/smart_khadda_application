@@ -36,15 +36,19 @@ public class OtpActivity extends AppCompatActivity {
     TextInputEditText smsOtpTextInputEditText;
 
     public void otpConfirmedClicked (View view) {
-        if (emailOtpTextInputEditText.getText().toString().equals("") || smsOtpTextInputEditText.getText().toString().equals("")) {
-            showCustomSnackBar(view, "All fields are mandatory.");
-            return;
-        }
 
-        String code = smsOtpTextInputEditText.getText().toString();
+    	String code = smsOtpTextInputEditText.getText().toString();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
 
         signInWithCredential(credential);
+    	
+        if (emailOtpTextInputEditText.getText().toString().equals("") || smsOtpTextInputEditText.getText().toString().equals("")) {
+            showCustomSnackBar(view, "All fields are mandatory.");
+        }
+        else {
+            Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
