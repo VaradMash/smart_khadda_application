@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,38 +38,15 @@ public class OtpActivity extends AppCompatActivity {
 
     public void otpConfirmedClicked (View view) {
 
-    	String code = smsOtpTextInputEditText.getText().toString();
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        String code = smsOtpTextInputEditText.getText().toString();
 
-        signInWithCredential(credential);
-    	
-        if (emailOtpTextInputEditText.getText().toString().equals("") || smsOtpTextInputEditText.getText().toString().equals("")) {
+        if (code.isEmpty()) {
             showCustomSnackBar(view, "All fields are mandatory.");
         }
         else {
             Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
             startActivity(intent);
         }
-    }
-
-    private void signInWithCredential(PhoneAuthCredential credential) {
-        // inside this method we are checking if
-        // the code entered is correct or not.
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // if the code is correct and the task is successful
-                            // we are sending our user to new activity.
-                            Toast.makeText(OtpActivity.this, "Sign In Successful!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // if the code is not correct then we are
-                            // displaying an error message to the user.
-                            Toast.makeText(OtpActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
     }
 
     // This method avoids multiple SnackBars showing if one is currently being displayed
@@ -103,7 +81,7 @@ public class OtpActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                showCustomSnackBar(timerTextView, "Did not recieve OTP? Tap on Resend");
+                showCustomSnackBar(timerTextView, "Did not receive OTP? Tap on Resend");
                 countDownTimer.cancel();
                 resendOtpAllowed = true;
             }
@@ -119,66 +97,6 @@ public class OtpActivity extends AppCompatActivity {
         timerTextView.setText("Wait: " + minutes + ":" + secondStrings);
     }
 
-    private void getOTP()
-    {
-        // Invoke this method to get OTP on email address and phone number.
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phone)                               // Phone number to verify
-                        .setTimeout(120L, TimeUnit.SECONDS)    // Timeout and unit
-                        .setActivity(this)                                  // Activity (for callback binding)
-                        .setCallbacks(mCallBack)                            // OnVerificationStateChangedCallbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
-
-    // callback method is called on Phone auth provider.
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-
-            // initializing our callbacks for on
-            // verification callback method.
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        // below method is used when
-        // OTP is sent from Firebase
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            verificationId = s;
-        }
-
-        // this method is called when user
-        // receive OTP from Firebase.
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            // below line is used for getting OTP code
-            // which is sent in phone auth credentials.
-            final String code = phoneAuthCredential.getSmsCode();
-
-            // checking if the code
-            // is null or not.
-            if (code != null) {
-                // if the code is not null then
-                // we are setting that code to
-                // our OTP edittext field.
-
-
-                // after setting this code
-                // to OTP edittext field we
-                // are calling our verifycode method.
-                Toast.makeText(OtpActivity.this, code, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        // this method is called when firebase doesn't
-        // sends our OTP code due to any error or issue.
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            // displaying error message with firebase exception.
-            Toast.makeText(OtpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,14 +109,95 @@ public class OtpActivity extends AppCompatActivity {
         phone = intent.getStringExtra("phone");
         email = intent.getStringExtra("email");
 
-        // Request for OTP
-        getOTP();
-
         resendOtpTextView = findViewById(R.id.resendOtpTextView);
         timerTextView = findViewById(R.id.timerTextView);
         emailOtpTextInputEditText = findViewById(R.id.emailOtpTextInputEditText);
         smsOtpTextInputEditText = findViewById(R.id.smsOtpTextInputEditText);
 
+        // send verification code
+        sendVerificationCode(phone);
         startCounter();
+    }
+
+    // Backend routines
+    private void sendVerificationCode(String phone)
+    {
+        /*
+         *  Input   :   Phone number
+         *  Utility :   Send verification code to phone.
+         *  Output  :   None
+         */
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phone)                          // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS)      // Timeout and unit
+                        .setActivity(this)                              // Activity (for callback binding)
+                        .setCallbacks(mCallbacks)                       // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    // Setting callback for phone authentication provider
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks
+            = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        @Override
+        public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            verificationId = s;
+        }
+
+        @Override
+        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+            String code = phoneAuthCredential.getSmsCode();
+
+            if (code != null)
+            {
+                verifyCode(code);
+            }
+        }
+
+        @Override
+        public void onVerificationFailed(@NonNull FirebaseException e) {
+            // Log error
+            Log.d("Debug", e.getMessage());
+            // Display error message to screen.
+            Toast.makeText(OtpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void verifyCode(String code)
+    {
+        /*
+         *  Input   :   OTP
+         *  Utility :   Verify OTP sent by system.
+         *  Output  :   None
+         */
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(this.verificationId, code);
+        signInUserWithCredentials(credential);
+    }
+
+    private void signInUserWithCredentials(PhoneAuthCredential credential) {
+        /*
+         *  Input   :   Credentials
+         *  Utility :   Sign in user with credentials
+         *  Output  :   None
+         */
+        mAuth.signInWithCredential(credential).
+                addOnCompleteListener(OtpActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(getApplicationContext(), "OTP verified successfuly !", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            Toast.makeText(OtpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
