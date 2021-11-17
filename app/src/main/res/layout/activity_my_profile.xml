@@ -55,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:enabled="false"
                 android:hint="Full Name"
+                app:boxBackgroundColor="@color/white"
                 app:startIconDrawable="@drawable/icon_person"
                 app:startIconTint="@color/black">
 
@@ -82,15 +83,15 @@
                 android:layout_height="match_parent"
                 android:enabled="false"
                 android:hint="Email"
+                app:boxBackgroundColor="@color/white"
                 app:startIconDrawable="@drawable/icon_email"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailTextInputEditText"
+                    android:id="@+id/email2TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:inputType="textEmailAddress" />
+                    android:enabled="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,14 +109,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Phone Number"
+                app:boxBackgroundColor="@color/white"
                 app:startIconDrawable="@drawable/icon_phone"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneTextInputEditText"
+                    android:id="@+id/phone2TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:enabled="false"
                     android:maxLength="10" />
 
             </com.google.android.material.textfield.TextInputLayout>

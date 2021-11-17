@@ -8,13 +8,11 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
 public class RegisterScreenActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
     TextInputEditText usernameTextInputEditText;
     TextInputEditText emailTextInputEditText;
     TextInputEditText phoneTextInputEditText;
@@ -33,27 +31,22 @@ public class RegisterScreenActivity extends AppCompatActivity {
     }
 
     public void getOtpButtonClicked (View view) {
-        String phoneNumber = phoneTextInputEditText.getText().toString();
-        String emailAddress = emailTextInputEditText.getText().toString();
         if (Objects.requireNonNull(emailTextInputEditText.getText()).toString().equals("") ||
                 Objects.requireNonNull(phoneTextInputEditText.getText()).toString().equals("") ||
                 Objects.requireNonNull(usernameTextInputEditText.getText()).toString().equals("")) {
             showCustomSnackBar(view, "All fields are mandatory.");
         }
-        else if (phoneNumber.length() != 10) {
+        else if (phoneTextInputEditText.getText().toString().length() != 10) {
             showCustomSnackBar(view, "Enter a valid phone number.");
         }
-        else if (!emailAddress.contains("@")) {
+        else if (!emailTextInputEditText.getText().toString().contains("@")) {
             showCustomSnackBar(view, "Enter a valid Email Id");
         }
         else {
-            phoneNumber = "+91" + phoneNumber;
             tinyDB.putString("userName", usernameTextInputEditText.getText().toString());
             tinyDB.putString("userEmail", emailTextInputEditText.getText().toString());
             tinyDB.putString("userPhoneNumber", phoneTextInputEditText.getText().toString());
             Intent intent = new Intent(getApplicationContext(), OtpActivity.class);
-            intent.putExtra("phone", phoneNumber);
-            intent.putExtra("email", emailAddress);
             startActivity(intent);
         }
     }
@@ -67,7 +60,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
         tinyDB = new TinyDB(getApplicationContext());
 
         usernameTextInputEditText = findViewById(R.id.usernameTextInputEditText);
-        emailTextInputEditText = findViewById(R.id.email2TextInputEditText);
+        emailTextInputEditText = findViewById(R.id.emailTextInputEditText);
         phoneTextInputEditText = findViewById(R.id.phoneTextInputEditText);
 
     }

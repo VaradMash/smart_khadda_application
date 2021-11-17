@@ -33,7 +33,6 @@ public class OtpActivity extends AppCompatActivity {
     TextView resendOtpTextView;
     TextView timerTextView;
     CountDownTimer countDownTimer;
-    TextInputEditText emailOtpTextInputEditText;
     TextInputEditText smsOtpTextInputEditText;
 
     public void otpConfirmedClicked (View view) {
@@ -111,11 +110,10 @@ public class OtpActivity extends AppCompatActivity {
 
         resendOtpTextView = findViewById(R.id.resendOtpTextView);
         timerTextView = findViewById(R.id.timerTextView);
-        emailOtpTextInputEditText = findViewById(R.id.emailOtpTextInputEditText);
         smsOtpTextInputEditText = findViewById(R.id.smsOtpTextInputEditText);
 
         // send verification code
-        sendVerificationCode(phone);
+        //sendVerificationCode(phone);
         startCounter();
     }
 

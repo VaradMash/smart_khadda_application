@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,6 +42,7 @@
                 android:insetTop="0dp"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
+                android:onClick="uploadPhotoPressed"
                 android:padding="0dp"
                 app:cornerRadius="30dp"
                 app:icon="@drawable/icon_camera"
@@ -60,6 +61,50 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
+            <LinearLayout
+                android:id="@+id/imageContainerLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/photoImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/icon_image" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/imageCaptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Image Selected"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:backgroundTint="#FFC107"
+                android:onClick="onRefreshTapped"
+                android:padding="15dp"
+                android:text="Refresh"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                app:cornerRadius="50dp"
+                app:icon="@drawable/icon_refresh"
+                app:iconTint="@color/black" />
+
             <TextView
                 android:id="@+id/locationTextView"
                 android:layout_width="match_parent"
@@ -75,15 +120,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Location"
+                app:boxBackgroundColor="@color/white"
                 app:counterMaxLength="10"
                 app:startIconDrawable="@drawable/icon_location"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/locationTextInputEditText"
+                    android:id="@+id/locationRCTextInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,6 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Description"
+                app:boxBackgroundColor="@color/white"
                 app:counterMaxLength="10"
                 app:startIconDrawable="@drawable/icon_description"
                 app:startIconTint="@color/black">
@@ -109,38 +155,35 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/descriptionTextInputEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:backgroundTint="#FFC107"
+                    android:padding="15dp"
+                    android:text="Submit Complaint"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/icon_upload"
+                    app:iconTint="@color/black" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="#FFC107"
-            android:padding="15dp"
-            android:text="Submit Complaint"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            app:cornerRadius="50dp"
-            app:icon="@drawable/icon_upload"
-            app:iconTint="@color/black" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

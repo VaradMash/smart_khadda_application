@@ -8,9 +8,20 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+    TinyDB tinyDB;
+
     public void onGetStartedPressed(View view) {
-        Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
-        startActivity(intent);
+        try {
+            tinyDB = new TinyDB(getApplicationContext());
+            if (tinyDB.getBoolean("userIsLoggedIn")) {
+                Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                startActivity(intent);
+            }
+            else {
+                Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+                startActivity(intent);
+            }
+        } catch (Exception e) {}
     }
 
     @Override
@@ -19,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
+
+        try {
+            tinyDB = new TinyDB(getApplicationContext());
+            if (tinyDB.getBoolean("userIsLoggedIn")) {
+                Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                startActivity(intent);
+            }
+        } catch (Exception e) {}
 
     }
 }

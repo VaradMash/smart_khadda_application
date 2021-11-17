@@ -26,35 +26,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/merriweather"
-                android:text="Check your Email and SMS Inbox"
+                android:text="Check your SMS Inbox"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="20dp"
-                android:text="Enter the OTP you recieved by Email"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextField"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Email OTP"
-                app:startIconDrawable="@drawable/icon_email"
-                app:startIconTint="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailOtpTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/textView6"
@@ -71,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="SMS OTP"
+                app:boxBackgroundColor="@color/white"
                 app:counterMaxLength="10"
                 app:startIconDrawable="@drawable/icon_phone"
                 app:startIconTint="@color/black">

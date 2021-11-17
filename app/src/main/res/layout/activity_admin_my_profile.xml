@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_500"
-    tools:context=".RegisterScreenActivity">
+    tools:context=".AdminMyProfileActivity">
 
     <ScrollView
-        android:id="@+id/scrollView3"
+        android:id="@+id/scrollView4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,92 +23,93 @@
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textView20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/merriweather"
-                android:text="First, let's verify your identity"
+                android:text="Admin - My Profile"
+                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/textView21"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Please Enter your Full Name"
+                android:text="Your Name"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/usernameTextField"
+                android:id="@+id/adminUsernameTextField"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:enabled="false"
                 android:hint="Full Name"
                 app:boxBackgroundColor="@color/white"
-                app:boxBackgroundMode="filled"
                 app:startIconDrawable="@drawable/icon_person"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/usernameTextInputEditText"
+                    android:id="@+id/adminUsernameTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:inputType="textEmailAddress" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Please enter your Email Address"
+                android:text="Your Email Address"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextField"
+                android:id="@+id/adminEmailTextField"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:enabled="false"
                 android:hint="Email"
                 app:boxBackgroundColor="@color/white"
-                app:boxBackgroundMode="filled"
                 app:startIconDrawable="@drawable/icon_email"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email2TextInputEditText"
+                    android:id="@+id/adminEmail2TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:enabled="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textView23"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="Please enter your Phone Number"
+                android:text="Your Phone Number"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phoneTextField"
+                android:id="@+id/adminPhoneTextField"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Phone Number"
                 app:boxBackgroundColor="@color/white"
-                app:boxBackgroundMode="filled"
                 app:startIconDrawable="@drawable/icon_phone"
                 app:startIconTint="@color/black">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneTextInputEditText"
+                    android:id="@+id/adminPhone2TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:enabled="false"
                     android:maxLength="10" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -117,7 +118,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -128,18 +129,19 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="#FFC107"
-            android:onClick="getOtpButtonClicked"
+            android:onClick="onBackPressed"
             android:padding="15dp"
-            android:text="Get OTP"
+            android:text="Go Back"
+            android:textAllCaps="false"
             android:textColor="@color/black"
             app:cornerRadius="50dp"
-            app:icon="@drawable/icon_key"
+            app:icon="@drawable/icon_back"
             app:iconTint="@color/black" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

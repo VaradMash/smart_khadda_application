@@ -51,9 +51,11 @@ public class MyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
+        getSupportActionBar().hide();
+
         usernameTextInputEditText = findViewById(R.id.usernameTextInputEditText);
-        emailTextInputEditText = findViewById(R.id.emailOtpTextInputEditText);
-        phoneTextInputEditText = findViewById(R.id.phoneTextInputEditText);
+        emailTextInputEditText = findViewById(R.id.email2TextInputEditText);
+        phoneTextInputEditText = findViewById(R.id.phone2TextInputEditText);
         complaintCountTextView = findViewById(R.id.complaintCountTextView);
 
         tinyDB = new TinyDB(getApplicationContext());
