@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -52,6 +53,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
     LinearLayout imageContainerLinearLayout;
     Uri image;
     String mCameraFileName;
+    FirebaseAuth mAuth;
     boolean imageIsCaptured = false;
     TinyDB tinyDB;
     boolean userIsLoggedIn = true;
@@ -171,7 +173,10 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.logOutMenuItem:
-                Toast.makeText(this, "Log Out Code goes here.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Log Out Code goes here.", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -184,6 +189,8 @@ public class RegisterComplaintActivity extends AppCompatActivity {
 
         tinyDB = new TinyDB(getApplicationContext());
         tinyDB.putBoolean("userIsLoggedIn", userIsLoggedIn);
+
+        mAuth = FirebaseAuth.getInstance();
 
         locationTextView = findViewById(R.id.locationTextView);
         imageCaptionTextView = findViewById(R.id.imageCaptionTextView);
