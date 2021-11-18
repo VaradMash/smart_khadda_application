@@ -243,6 +243,7 @@ public class OtpActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
                             update_database();
                             startActivity(intent);
+                            OtpActivity.this.finish();
                         }
                         else
                         {

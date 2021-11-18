@@ -57,6 +57,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
             intent.putExtra("email", emailAddress);
             intent.putExtra("name", name);
             startActivity(intent);
+            RegisterScreenActivity.this.finish();
         }
     }
 

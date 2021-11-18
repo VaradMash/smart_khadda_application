@@ -2,6 +2,7 @@ package com.example.smartcityportal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,5 +63,18 @@ public class MyProfileActivity extends AppCompatActivity {
 
         setValues();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        /*
+         *  Input   :   Back button press
+         *  Utility :   Route to RegisterComplaintActivity.
+         *  Output  :   Activity launch
+         */
+        Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+        startActivity(intent);
+        MyProfileActivity.this.finish();
     }
 }
