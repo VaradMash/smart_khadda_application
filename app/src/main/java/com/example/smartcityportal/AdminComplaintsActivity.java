@@ -2,10 +2,17 @@ package com.example.smartcityportal;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,12 +21,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class AdminComplaintsActivity extends AppCompatActivity {
 
     private Menu menuList;
     private FirebaseAuth mAuth;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private String locality;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,7 +54,6 @@ public class AdminComplaintsActivity extends AppCompatActivity {
             case R.id.adminMyProfileMenuItem:
                 intent = new Intent(getApplicationContext(), MyProfileActivity.class);
                 startActivity(intent);
-                AdminComplaintsActivity.this.finish();
                 break;
             case R.id.adminLogOutMenuItem:
                 mAuth.signOut();
@@ -56,6 +72,49 @@ public class AdminComplaintsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        // Capture locality
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            Location last_location = task.getResult();
+                            Geocoder geocoder = new Geocoder(AdminComplaintsActivity.this,
+                                    Locale.getDefault());
+                            try
+                            {
+                                List<Address> addresses = geocoder.getFromLocation(
+                                        last_location.getLatitude(),
+                                        last_location.getLongitude(),
+                                        1);
+                                Address current_address = addresses.get(0);
+                                locality = current_address.getLocality();
+                                Toast.makeText(AdminComplaintsActivity.this, "Acquiring complaints for " + locality, Toast.LENGTH_SHORT).show();
+                                renderComplaints();
+                            }
+                            catch (IOException e)
+                            {
+                                Toast.makeText(AdminComplaintsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(AdminComplaintsActivity.this, "Could not acquire location !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void renderComplaints()
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Render complaints based on locality on the screen.
+         *  Output  :   None
+         */
     }
 
     @Override
