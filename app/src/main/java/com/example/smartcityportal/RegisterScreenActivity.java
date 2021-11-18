@@ -35,6 +35,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
     public void getOtpButtonClicked (View view) {
         String phoneNumber = phoneTextInputEditText.getText().toString();
         String emailAddress = emailTextInputEditText.getText().toString();
+        String name = usernameTextInputEditText.getText().toString();
         if (Objects.requireNonNull(emailTextInputEditText.getText()).toString().equals("") ||
                 Objects.requireNonNull(phoneTextInputEditText.getText()).toString().equals("") ||
                 Objects.requireNonNull(usernameTextInputEditText.getText()).toString().equals("")) {
@@ -54,6 +55,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), OtpActivity.class);
             intent.putExtra("phone", phoneNumber);
             intent.putExtra("email", emailAddress);
+            intent.putExtra("name", name);
             startActivity(intent);
         }
     }
