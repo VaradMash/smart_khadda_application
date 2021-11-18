@@ -13,7 +13,6 @@
         android:text="Are you sure you want to Exit?"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,8 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Yes"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btnCancel"
@@ -49,8 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="No"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

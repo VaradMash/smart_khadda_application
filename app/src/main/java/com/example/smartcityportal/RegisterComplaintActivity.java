@@ -228,6 +228,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
          *  Output  :   Destroy app conditionally
          */
         AlertDialog.Builder alert_dialog = new AlertDialog.Builder(RegisterComplaintActivity.this);
+        alert_dialog.setTitle("Confirm Exit");
         View dialog_view = getLayoutInflater().inflate(R.layout.exit_dialog, null);
         Button btnExit = (Button)dialog_view.findViewById(R.id.btnExit);
         Button btnCancel = (Button)dialog_view.findViewById(R.id.btnCancel);
