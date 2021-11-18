@@ -194,39 +194,30 @@ public class OtpActivity extends AppCompatActivity {
          *  Utility :   Update database if user document does not exist.
          *  Output  :   None
          */
-        Task<QuerySnapshot> user_reference = FirebaseFirestore.getInstance().collection("user_data")
-                .whereEqualTo("phone_number", phone).get();
-        user_reference.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.getResult().isEmpty())
-                {
-                    CollectionReference user_collection = FirebaseFirestore.getInstance().collection("user_data");
-                    Map<String, Object> user_data = new HashMap<>();
-                    user_data.put("username", name);
-                    user_data.put("email", email);
-                    user_data.put("phone_number", phone);
-                    user_data.put("user_type", "user");
-                    user_data.put("total_complaints", 0);
-                    user_collection.document(phone)
-                            .set(user_data)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful())
-                            {
-                                Toast.makeText(OtpActivity.this, "Welcome !", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(OtpActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                            }
+        CollectionReference user_collection = FirebaseFirestore.getInstance().collection("user_data");
+        Map<String, Object> user_data = new HashMap<>();
+        user_data.put("username", name);
+        user_data.put("email", email);
+        user_data.put("phone_number", phone);
+        user_data.put("user_type", "user");
+        user_data.put("total_complaints", 0);
+        user_collection.document(phone)
+                .set(user_data)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(OtpActivity.this, "Welcome !", Toast.LENGTH_SHORT).show();
                         }
-                    });
-                }
-            }
-        });
+                        else
+                        {
+                            Toast.makeText(OtpActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
+
     private void signInUserWithCredentials(PhoneAuthCredential credential) {
         /*
          *  Input   :   Credentials
@@ -240,10 +231,35 @@ public class OtpActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             Toast.makeText(getApplicationContext(), "OTP verified successfully !", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-                            update_database();
-                            startActivity(intent);
                             OtpActivity.this.finish();
+                            Task<QuerySnapshot> user_reference = FirebaseFirestore.getInstance().collection("user_data")
+                                    .whereEqualTo("phone_number", phone).get();
+                            user_reference.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.getResult().isEmpty())
+                                    {
+                                        update_database();
+                                        Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        DocumentSnapshot user_document = task.getResult().getDocuments().get(0);
+                                        String user_type = user_document.get("user_type").toString();
+                                        Intent intent;
+                                        if (user_type.equals("user"))
+                                        {
+                                            intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                                        }
+                                        else
+                                        {
+                                            intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
+                                        }
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
                         }
                         else
                         {

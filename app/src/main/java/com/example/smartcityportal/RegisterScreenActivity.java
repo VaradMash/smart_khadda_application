@@ -44,7 +44,7 @@ public class RegisterScreenActivity extends AppCompatActivity {
         else if (phoneNumber.length() != 10) {
             showCustomSnackBar(view, "Enter a valid phone number.");
         }
-        else if (!emailAddress.contains("@")) {
+        else if (!emailAddress.contains("@") && !emailAddress.contains(".com")) {
             showCustomSnackBar(view, "Enter a valid Email Id");
         }
         else {

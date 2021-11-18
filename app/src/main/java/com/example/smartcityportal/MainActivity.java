@@ -1,13 +1,21 @@
 package com.example.smartcityportal;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,16 +35,53 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        } catch (Exception e) {
-        Intent intent;
+
         if (user != null)
         {
-            intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+            try
+            {
+                tinyDB = new TinyDB(getApplicationContext());
+                String phone = "+91" + tinyDB.getString("userPhoneNumber");
+                DocumentReference user_document = FirebaseFirestore.getInstance()
+                        .collection("user_data")
+                        .document();
+                user_document.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful())
+                                {
+                                    DocumentSnapshot user_details = task.getResult();
+                                    String role = user_details.get("user_type").toString();
+                                    Intent intent;
+                                    if (role.equals("user"))
+                                    {
+                                        intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                                    }
+                                    else
+                                    {
+                                        intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
+                                    }
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
         }
         else
         {
-            intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+            Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+            startActivity(intent);
         }
-        startActivity(intent);
         MainActivity.this.finish();
     }
 
@@ -58,9 +103,52 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         if (user != null)
         {
-            Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-            startActivity(intent);
-            MainActivity.this.finish();
+            try
+            {
+                tinyDB = new TinyDB(getApplicationContext());
+                String phone = "+91" + tinyDB.getString("userPhoneNumber");
+                DocumentReference user_document = FirebaseFirestore.getInstance()
+                        .collection("user_data")
+                        .document(phone);
+                user_document.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful())
+                                {
+                                    DocumentSnapshot user_details = task.getResult();
+                                    String role = user_details.get("user_type").toString();
+                                    Intent intent;
+                                    if (role.equals("user"))
+                                    {
+                                        intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                                    }
+                                    else
+                                    {
+                                        intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
+                                    }
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Log.d("Debug", task.getException().toString());
+                                    Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
         }
+        else
+        {
+            Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+            startActivity(intent);
+        }
+        MainActivity.this.finish();
     }
 }
