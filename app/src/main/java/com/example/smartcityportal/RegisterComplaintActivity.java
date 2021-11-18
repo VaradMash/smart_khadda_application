@@ -1,12 +1,15 @@
 package com.example.smartcityportal;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,19 +37,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class RegisterComplaintActivity extends AppCompatActivity {
 
-    LocationManager locationManager;
-    LocationListener locationListener;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     TextView locationTextView;
     TextView imageCaptionTextView;
     TextInputEditText locationTextInputEditText;
@@ -59,21 +69,20 @@ public class RegisterComplaintActivity extends AppCompatActivity {
     boolean imageIsCaptured = false;
     TinyDB tinyDB;
     boolean userIsLoggedIn = true;
+    private String locality;
 
-    public void onRefreshTapped (View view) {
+    public void onRefreshTapped(View view) {
         Intent intent = getIntent();
         finish();
         startActivity(intent);
     }
 
-    public void uploadPhotoPressed (View view) {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    public void uploadPhotoPressed(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
-        else if (imageIsCaptured) {
+        } else if (imageIsCaptured) {
             showCustomSnackBar(imageCaptionTextView, "Photo already present. Press refresh to upload a new one.");
-        }
-        else {
+        } else {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
 
@@ -125,7 +134,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
     }
 
     // This method avoids multiple SnackBars showing if one is currently being displayed
-    public void showCustomSnackBar (View view, String message) {
+    public void showCustomSnackBar(View view, String message) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         snackbar.setAction("Got it", new View.OnClickListener() {
             @Override
@@ -141,15 +150,15 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) { {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
+                {
+                    renderLocation();
                 }
             }
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
-        }
-        else {
+        } else {
             showCustomSnackBar(locationTextView, "Please Grant all the Permissions.");
         }
     }
@@ -162,6 +171,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
@@ -175,7 +185,6 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.logOutMenuItem:
-//                Toast.makeText(this, "Log Out Code goes here.", Toast.LENGTH_SHORT).show();
                 mAuth.signOut();
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
@@ -193,6 +202,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         tinyDB.putBoolean("userIsLoggedIn", userIsLoggedIn);
 
         mAuth = FirebaseAuth.getInstance();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         locationTextView = findViewById(R.id.locationTextView);
         imageCaptionTextView = findViewById(R.id.imageCaptionTextView);
@@ -200,26 +210,48 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         locationTextInputEditText = findViewById(R.id.locationRCTextInputEditText);
         imageContainerLinearLayout = findViewById(R.id.imageContainerLinearLayout);
 
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-
-            }
-        };
-
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        renderLocation();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
     }
 
+    private void renderLocation() {
+        /*
+         *  Input   :   None
+         *  Utility :   Render location to edit text.
+         *  Output  :   None
+         */
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            Location last_location = task.getResult();
+                            Geocoder geocoder = new Geocoder(RegisterComplaintActivity.this,
+                                    Locale.getDefault());
+                            try {
+                                List<Address> addresses = geocoder.getFromLocation(
+                                        last_location.getLatitude(),
+                                        last_location.getLongitude(),
+                                        1);
+                                Address current_address = addresses.get(0);
+                                locality = current_address.getLocality();
+                                address = current_address.getAddressLine(0);
+                                locationTextInputEditText.setText(address);
+                            } catch (IOException e) {
+                                Toast.makeText(RegisterComplaintActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(RegisterComplaintActivity.this, "Could not acquire location !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
     @Override
     public void onBackPressed() {
         /*
