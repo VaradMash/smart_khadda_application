@@ -36,53 +36,36 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        } catch (Exception e) {
 
-        if (user != null)
-        {
-            try
-            {
-                tinyDB = new TinyDB(getApplicationContext());
-                String phone = "+91" + tinyDB.getString("userPhoneNumber");
-                DocumentReference user_document = FirebaseFirestore.getInstance()
-                        .collection("user_data")
-                        .document();
-                user_document.get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful())
-                                {
-                                    DocumentSnapshot user_details = task.getResult();
-                                    String role = user_details.get("user_type").toString();
-                                    Intent intent;
-                                    if (role.equals("user"))
-                                    {
-                                        intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-                                    }
-                                    else
-                                    {
-                                        intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
-                                    }
-                                    startActivity(intent);
+        try {
+            tinyDB = new TinyDB(getApplicationContext());
+            String phone = "+91" + tinyDB.getString("userPhoneNumber");
+            DocumentReference user_document = FirebaseFirestore.getInstance()
+                    .collection("user_data")
+                    .document();
+            user_document.get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot user_details = task.getResult();
+                                String role = user_details.get("user_type").toString();
+                                Intent intent;
+                                if (role.equals("user")) {
+                                    intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                                } else {
+                                    intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
                                 }
-                                else
-                                {
-                                    Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                                }
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+                                startActivity(intent);
                             }
-                        });
-            }
-            catch (Exception e)
-            {
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
+                            MainActivity.this.finish();
+                        }
+                    });
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        else
-        {
-            Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
-            startActivity(intent);
-        }
-        MainActivity.this.finish();
     }
 
     @Override
@@ -128,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                                         intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
                                     }
                                     startActivity(intent);
+                                    MainActivity.this.finish();
                                 }
                                 else
                                 {
@@ -140,15 +124,8 @@ public class MainActivity extends AppCompatActivity {
             catch (Exception e)
             {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
         }
-        else
-        {
-            Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
-            startActivity(intent);
-        }
-        MainActivity.this.finish();
     }
 }
