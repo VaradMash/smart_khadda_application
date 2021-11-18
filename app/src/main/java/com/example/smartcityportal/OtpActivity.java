@@ -1,6 +1,7 @@
 package com.example.smartcityportal;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,14 +22,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class OtpActivity extends AppCompatActivity {
 
     private final int TIMEOUT = 30000;
     private FirebaseAuth mAuth;
-    private String phone, email, verificationId;
+    private String phone, email, verificationId, name;
     boolean resendOtpAllowed = false;
     TextView resendOtpTextView;
     TextView timerTextView;
@@ -43,8 +54,7 @@ public class OtpActivity extends AppCompatActivity {
             showCustomSnackBar(view, "All fields are mandatory.");
         }
         else {
-            Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-            startActivity(intent);
+            verifyCode(code);
         }
     }
 
@@ -65,6 +75,7 @@ public class OtpActivity extends AppCompatActivity {
             showCustomSnackBar(resendOtpTextView, "Please wait till timer expires.");
         }
         else {
+            sendVerificationCode(phone);
             startCounter();
             showCustomSnackBar(resendOtpTextView, "OTP Resent.");
             resendOtpAllowed = false;
@@ -107,13 +118,14 @@ public class OtpActivity extends AppCompatActivity {
         Intent intent = getIntent();
         phone = intent.getStringExtra("phone");
         email = intent.getStringExtra("email");
+        name = intent.getStringExtra("name");
 
         resendOtpTextView = findViewById(R.id.resendOtpTextView);
         timerTextView = findViewById(R.id.timerTextView);
         smsOtpTextInputEditText = findViewById(R.id.smsOtpTextInputEditText);
 
         // send verification code
-        //sendVerificationCode(phone);
+        sendVerificationCode(phone);
         startCounter();
     }
 
@@ -175,6 +187,46 @@ public class OtpActivity extends AppCompatActivity {
         signInUserWithCredentials(credential);
     }
 
+    private void update_database()
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Update database if user document does not exist.
+         *  Output  :   None
+         */
+        Task<QuerySnapshot> user_reference = FirebaseFirestore.getInstance().collection("user_data")
+                .whereEqualTo("phone_number", phone).get();
+        user_reference.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.getResult().isEmpty())
+                {
+                    CollectionReference user_collection = FirebaseFirestore.getInstance().collection("user_data");
+                    Map<String, Object> user_data = new HashMap<>();
+                    user_data.put("username", name);
+                    user_data.put("email", email);
+                    user_data.put("phone_number", phone);
+                    user_data.put("user_type", "user");
+                    user_data.put("total_complaints", 0);
+                    user_collection.document(phone)
+                            .set(user_data)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful())
+                            {
+                                Toast.makeText(OtpActivity.this, "Welcome !", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(OtpActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
     private void signInUserWithCredentials(PhoneAuthCredential credential) {
         /*
          *  Input   :   Credentials
@@ -187,8 +239,9 @@ public class OtpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
-                            Toast.makeText(getApplicationContext(), "OTP verified successfuly !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "OTP verified successfully !", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
+                            update_database();
                             startActivity(intent);
                         }
                         else
