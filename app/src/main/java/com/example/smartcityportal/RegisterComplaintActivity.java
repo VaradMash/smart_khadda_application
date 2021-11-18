@@ -2,6 +2,7 @@ package com.example.smartcityportal;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -216,5 +218,36 @@ public class RegisterComplaintActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*
+         *  Input   :   Back button press
+         *  Utility :   Display dialog box for exit confirmation.
+         *  Output  :   Destroy app conditionally
+         */
+        AlertDialog.Builder alert_dialog = new AlertDialog.Builder(RegisterComplaintActivity.this);
+        View dialog_view = getLayoutInflater().inflate(R.layout.exit_dialog, null);
+        Button btnExit = (Button)dialog_view.findViewById(R.id.btnExit);
+        Button btnCancel = (Button)dialog_view.findViewById(R.id.btnCancel);
+
+        alert_dialog.setView(dialog_view);
+        AlertDialog alertDialog = alert_dialog.create();
+        alert_dialog.setCancelable(false);
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterComplaintActivity.this.finish();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 }

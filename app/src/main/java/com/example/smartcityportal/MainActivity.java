@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
         }
         startActivity(intent);
+        MainActivity.this.finish();
     }
 
     @Override
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
             startActivity(intent);
+            MainActivity.this.finish();
         }
     }
 }
