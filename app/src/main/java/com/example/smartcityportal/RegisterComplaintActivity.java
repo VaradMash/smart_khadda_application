@@ -301,6 +301,8 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         {
             // Capture Date and time
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            String complaint_date = date.format(new Date());
             String timestamp = sdf.format(new Date());
 
             // generate UID for complaint and image.
@@ -333,6 +335,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                                     complaint_data.put("lat", current_location.getLatitude());
                                     complaint_data.put("long", current_location.getLongitude());
                                     complaint_data.put("complaint_image", "complaint_images/" + file_name);
+                                    complaint_data.put("complaint_date", complaint_date);
                                     DocumentReference complaint_document = FirebaseFirestore.getInstance()
                                             .collection("complaints_data")
                                             .document(document_uid);
