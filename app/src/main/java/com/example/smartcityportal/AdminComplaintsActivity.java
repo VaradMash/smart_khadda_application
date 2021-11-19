@@ -14,11 +14,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,17 +28,27 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class AdminComplaintsActivity extends AppCompatActivity {
 
     private Menu menuList;
     private FirebaseAuth mAuth;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private List<Map<String, Object>> complaints_list;
     private String locality;
+    private ProgressBar pbAdminComplaints;
+    private TinyDB tinyDB;
+    private CollectionReference complaint_data;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,6 +86,11 @@ public class AdminComplaintsActivity extends AppCompatActivity {
 
         // Capture locality
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        pbAdminComplaints = (ProgressBar)findViewById(R.id.pbAdminComplaints);
+        tinyDB = new TinyDB(getApplicationContext());
+        complaint_data = FirebaseFirestore.getInstance().collection("complaints_data");
+        complaints_list = new ArrayList<>();
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -106,6 +123,56 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*
+         *  Input   :   None
+         *  Utility :   Get relevant documents for the active complaints of current user.
+         *  Output  :   Render records on screen.
+         */
+        try
+        {
+            pbAdminComplaints.setVisibility(View.VISIBLE);
+            String phone = "+91" + tinyDB.getString("userPhoneNumber");
+            complaint_data
+                    .whereEqualTo("complaint_status", "active")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful())
+                            {
+                                QuerySnapshot result = task.getResult();
+                                if(result.isEmpty())
+                                {
+                                    Toast.makeText(getApplicationContext(), "No active complaints found !", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    for(DocumentSnapshot document : result)
+                                    {
+                                        complaints_list.add(document.getData());
+                                    }
+                                    Log.d("Debug", String.valueOf(complaints_list.size()));
+                                }
+                                pbAdminComplaints.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                pbAdminComplaints.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+        }
+        catch(Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void renderComplaints()
