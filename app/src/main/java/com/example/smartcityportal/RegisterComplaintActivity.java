@@ -137,12 +137,12 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                 if (!file.exists()) {
                     file.mkdir();
                 }
+                imageIsCaptured = true;
+                imageCaptionTextView.setText("Above Photo will be Submitted");
             }
         }
         //Bitmap photo = (Bitmap) data.getExtras().get("data");
         //photoImageView.setImageBitmap(photo);
-        imageCaptionTextView.setText("Above Photo will be Submitted");
-        imageIsCaptured = true;
         super.onActivityResult(requestCode, resultCode, data);
     }
 
