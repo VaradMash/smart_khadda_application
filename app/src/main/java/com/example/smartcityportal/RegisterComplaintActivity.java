@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
     TextView locationTextView;
     TextView imageCaptionTextView;
     TextInputEditText locationTextInputEditText, descriptionTextInputEditText;
+    ProgressBar pbRegisterComplaint;
     ImageView photoImageView;
     private Menu menuList;
     String address = "";
@@ -221,6 +223,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         locationTextInputEditText = findViewById(R.id.locationRCTextInputEditText);
         descriptionTextInputEditText = findViewById(R.id.descriptionTextInputEditText);
         imageContainerLinearLayout = findViewById(R.id.imageContainerLinearLayout);
+        pbRegisterComplaint = findViewById(R.id.pbRegisterComplaint);
 
         renderLocation();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -235,9 +238,11 @@ public class RegisterComplaintActivity extends AppCompatActivity {
          *  Utility :   Render location to edit text.
          *  Output  :   None
          */
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
+        pbRegisterComplaint.setVisibility(View.VISIBLE);
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -263,6 +268,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                         }
                     }
                 });
+        pbRegisterComplaint.setVisibility(View.GONE);
     }
 
     public void submitComplaint(View v)
@@ -272,6 +278,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
          *  Utility :   Submit complaint and update database with relevant details.
          *  Output  :   None
          */
+
         String description = descriptionTextInputEditText.getText().toString();
 
         if(description.isEmpty())
@@ -307,38 +314,42 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                 StorageReference reference = storage.getReference();
 
                 String file_name = document_uid + ".jpg";
-
+                pbRegisterComplaint.setVisibility(View.VISIBLE);
                 reference.child("complaint_images").child(file_name).putFile(image)
                         .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                Map<String, Object> complaint_data = new HashMap<>();
-                                complaint_data.put("complainant_contact", contact_number);
-                                complaint_data.put("complainant_email", email_address);
-                                complaint_data.put("complaint_description", description);
-                                complaint_data.put("complaint_locality", locality);
-                                complaint_data.put("complaint_uid", document_uid);
-                                complaint_data.put("complaint_status", "active");
-                                complaint_data.put("lat", current_location.getLatitude());
-                                complaint_data.put("long", current_location.getLongitude());
-                                complaint_data.put("complaint_image", "complaint_images/" + file_name);
-                                DocumentReference complaint_document = FirebaseFirestore.getInstance()
-                                        .collection("complaints_data")
-                                        .document(document_uid);
-                                complaint_document.set(complaint_data)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful())
-                                                {
-                                                    Toast.makeText(RegisterComplaintActivity.this, "Your complaint with id " + document_uid + " has been registered!", Toast.LENGTH_SHORT).show();
+                                if (task.isSuccessful())
+                                {
+                                    Map<String, Object> complaint_data = new HashMap<>();
+                                    complaint_data.put("complainant_contact", contact_number);
+                                    complaint_data.put("complainant_email", email_address);
+                                    complaint_data.put("complaint_description", description);
+                                    complaint_data.put("complaint_locality", locality);
+                                    complaint_data.put("complaint_uid", document_uid);
+                                    complaint_data.put("complaint_status", "active");
+                                    complaint_data.put("lat", current_location.getLatitude());
+                                    complaint_data.put("long", current_location.getLongitude());
+                                    complaint_data.put("complaint_image", "complaint_images/" + file_name);
+                                    DocumentReference complaint_document = FirebaseFirestore.getInstance()
+                                            .collection("complaints_data")
+                                            .document(document_uid);
+                                    complaint_document.set(complaint_data)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful())
+                                                    {
+                                                        Toast.makeText(RegisterComplaintActivity.this, "Your complaint with id " + document_uid + " has been registered!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else
+                                                    {
+                                                        Toast.makeText(RegisterComplaintActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    Toast.makeText(RegisterComplaintActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+                                            });
+                                }
+                                pbRegisterComplaint.setVisibility(View.GONE);
                             }
                         });
             }

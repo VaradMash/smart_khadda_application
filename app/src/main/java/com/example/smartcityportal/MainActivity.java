@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     TinyDB tinyDB;
     FirebaseAuth mAuth;
     FirebaseUser user;
-
+    private ProgressBar pbMainActivity;
     public void onGetStartedPressed(View view) {
 //        try {
 //            tinyDB = new TinyDB(getApplicationContext());
@@ -82,12 +83,17 @@ public class MainActivity extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        } catch (Exception e) {}
+
+        pbMainActivity = findViewById(R.id.pbMainActivity);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
         if (user != null)
         {
             try
             {
+                pbMainActivity.setVisibility(View.VISIBLE);
                 tinyDB = new TinyDB(getApplicationContext());
                 String phone = "+91" + tinyDB.getString("userPhoneNumber");
                 DocumentReference user_document = FirebaseFirestore.getInstance()
@@ -112,11 +118,13 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     startActivity(intent);
                                     MainActivity.this.finish();
+                                    pbMainActivity.setVisibility(View.GONE);
                                 }
                                 else
                                 {
                                     Log.d("Debug", task.getException().toString());
                                     Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                    pbMainActivity.setVisibility(View.GONE);
                                 }
                             }
                         });
@@ -126,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
+        }
+        else
+        {
+            pbMainActivity.setVisibility(View.GONE);
         }
     }
 }

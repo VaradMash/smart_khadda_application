@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class OtpActivity extends AppCompatActivity {
     boolean resendOtpAllowed = false;
     TextView resendOtpTextView;
     TextView timerTextView;
+    ProgressBar pbOTPActivity;
     CountDownTimer countDownTimer;
     TextInputEditText smsOtpTextInputEditText;
 
@@ -123,6 +125,7 @@ public class OtpActivity extends AppCompatActivity {
         resendOtpTextView = findViewById(R.id.resendOtpTextView);
         timerTextView = findViewById(R.id.timerTextView);
         smsOtpTextInputEditText = findViewById(R.id.smsOtpTextInputEditText);
+        pbOTPActivity = findViewById(R.id.pbOTPActivity);
 
         // send verification code
         sendVerificationCode(phone);
@@ -137,6 +140,7 @@ public class OtpActivity extends AppCompatActivity {
          *  Utility :   Send verification code to phone.
          *  Output  :   None
          */
+        pbOTPActivity.setVisibility(View.VISIBLE);
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber(phone)                          // Phone number to verify
@@ -145,6 +149,7 @@ public class OtpActivity extends AppCompatActivity {
                         .setCallbacks(mCallbacks)                       // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+        pbOTPActivity.setVisibility(View.GONE);
     }
 
     // Setting callback for phone authentication provider
@@ -230,6 +235,7 @@ public class OtpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
+                            pbOTPActivity.setVisibility(View.VISIBLE);
                             Toast.makeText(getApplicationContext(), "OTP verified successfully !", Toast.LENGTH_SHORT).show();
                             OtpActivity.this.finish();
                             Task<QuerySnapshot> user_reference = FirebaseFirestore.getInstance().collection("user_data")
@@ -242,6 +248,7 @@ public class OtpActivity extends AppCompatActivity {
                                         update_database();
                                         Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
                                         startActivity(intent);
+                                        pbOTPActivity.setVisibility(View.GONE);
                                     }
                                     else
                                     {
@@ -257,6 +264,7 @@ public class OtpActivity extends AppCompatActivity {
                                             intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
                                         }
                                         startActivity(intent);
+                                        pbOTPActivity.setVisibility(View.GONE);
                                     }
                                 }
                             });
@@ -267,5 +275,18 @@ public class OtpActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        /*
+         *  Input   :   Back Button press
+         *  Utility :   Navigate to registration activity
+         *  Output  :   Registration activity launch
+         */
+        Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 }
