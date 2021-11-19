@@ -200,6 +200,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                 mAuth.signOut();
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                RegisterComplaintActivity.this.finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

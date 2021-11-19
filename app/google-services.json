@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "187152914207-tfq4n30vf4leif3rn9ulrtl23lla1t0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartcityportal",
+            "certificate_hash": "54c24a90cd688eb7615c4f258df7e63e5d75ad2e"
+          }
+        },
+        {
           "client_id": "187152914207-ttj6aa5btkqarnf8tnpcgdaaj4jgqbci.apps.googleusercontent.com",
           "client_type": 3
         }
