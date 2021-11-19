@@ -44,21 +44,30 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 public class RegisterComplaintActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private FirebaseStorage storage;
     TextView locationTextView;
     TextView imageCaptionTextView;
-    TextInputEditText locationTextInputEditText;
+    TextInputEditText locationTextInputEditText, descriptionTextInputEditText;
     ImageView photoImageView;
     private Menu menuList;
     String address = "";
@@ -70,6 +79,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
     TinyDB tinyDB;
     boolean userIsLoggedIn = true;
     private String locality;
+    private Location current_location;
 
     public void onRefreshTapped(View view) {
         Intent intent = getIntent();
@@ -202,12 +212,14 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         tinyDB.putBoolean("userIsLoggedIn", userIsLoggedIn);
 
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         locationTextView = findViewById(R.id.locationTextView);
         imageCaptionTextView = findViewById(R.id.imageCaptionTextView);
         photoImageView = findViewById(R.id.photoImageView);
         locationTextInputEditText = findViewById(R.id.locationRCTextInputEditText);
+        descriptionTextInputEditText = findViewById(R.id.descriptionTextInputEditText);
         imageContainerLinearLayout = findViewById(R.id.imageContainerLinearLayout);
 
         renderLocation();
@@ -231,13 +243,13 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
-                            Location last_location = task.getResult();
+                            current_location = task.getResult();
                             Geocoder geocoder = new Geocoder(RegisterComplaintActivity.this,
                                     Locale.getDefault());
                             try {
                                 List<Address> addresses = geocoder.getFromLocation(
-                                        last_location.getLatitude(),
-                                        last_location.getLongitude(),
+                                        current_location.getLatitude(),
+                                        current_location.getLongitude(),
                                         1);
                                 Address current_address = addresses.get(0);
                                 locality = current_address.getLocality();
@@ -252,6 +264,91 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void submitComplaint(View v)
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Submit complaint and update database with relevant details.
+         *  Output  :   None
+         */
+        String description = descriptionTextInputEditText.getText().toString();
+
+        if(description.isEmpty())
+        {
+            descriptionTextInputEditText.setError("Description cannot be empty !");
+            descriptionTextInputEditText.requestFocus();
+        }
+        else if (address.isEmpty())
+        {
+            locationTextInputEditText.setError("Location cannot be empty !");
+            locationTextInputEditText.requestFocus();
+        }
+        else if (!imageIsCaptured)
+        {
+            showCustomSnackBar(imageCaptionTextView, "Please capture image");
+        }
+        else
+        {
+            // Capture Date and time
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss", Locale.getDefault());
+            String timestamp = sdf.format(new Date());
+
+            // generate UID for complaint and image.
+            String document_uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid() + "_" + timestamp;
+            Log.d("Debug", "Document ID : " + document_uid);
+
+            // upload document
+            try
+            {
+                String contact_number = "+91" + tinyDB.getString("userPhoneNumber");
+                String email_address = tinyDB.getString("userEmail");
+
+                StorageReference reference = storage.getReference();
+
+                String file_name = document_uid + ".jpg";
+
+                reference.child("complaint_images").child(file_name).putFile(image)
+                        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                Map<String, Object> complaint_data = new HashMap<>();
+                                complaint_data.put("complainant_contact", contact_number);
+                                complaint_data.put("complainant_email", email_address);
+                                complaint_data.put("complaint_description", description);
+                                complaint_data.put("complaint_locality", locality);
+                                complaint_data.put("complaint_uid", document_uid);
+                                complaint_data.put("complaint_status", "active");
+                                complaint_data.put("lat", current_location.getLatitude());
+                                complaint_data.put("long", current_location.getLongitude());
+                                complaint_data.put("complaint_image", "complaint_images/" + file_name);
+                                DocumentReference complaint_document = FirebaseFirestore.getInstance()
+                                        .collection("complaints_data")
+                                        .document(document_uid);
+                                complaint_document.set(complaint_data)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Toast.makeText(RegisterComplaintActivity.this, "Your complaint with id " + document_uid + " has been registered!", Toast.LENGTH_SHORT).show();
+                                                }
+                                                else
+                                                {
+                                                    Toast.makeText(RegisterComplaintActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+            }
+            catch(Exception e)
+            {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         /*

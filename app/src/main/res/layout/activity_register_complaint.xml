@@ -182,7 +182,8 @@
                     android:textColor="@color/black"
                     app:cornerRadius="50dp"
                     app:icon="@drawable/icon_upload"
-                    app:iconTint="@color/black" />
+                    app:iconTint="@color/black"
+                    android:onClick="submitComplaint"/>
             </LinearLayout>
 
         </LinearLayout>
