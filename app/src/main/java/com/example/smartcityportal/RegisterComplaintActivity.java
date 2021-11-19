@@ -46,6 +46,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -339,9 +340,9 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful())
-                                                    {
+                                                    if(task.isSuccessful()) {
                                                         Toast.makeText(RegisterComplaintActivity.this, "Your complaint with id " + document_uid + " has been registered!", Toast.LENGTH_SHORT).show();
+                                                        incrementUserTotalComplaints ();
                                                     }
                                                     else
                                                     {
@@ -358,6 +359,37 @@ public class RegisterComplaintActivity extends AppCompatActivity {
             {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void incrementUserTotalComplaints()
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Increment the total complaints of the user by one.
+         *  Output  :   None
+         */
+        try
+        {
+            String user_document_name = "+91" + tinyDB.getString("userPhoneNumber");
+            DocumentReference user_document = FirebaseFirestore.getInstance()
+                    .collection("user_data")
+                    .document( user_document_name);
+
+            user_document.get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot user_data = task.getResult();
+                            long total_complaints = user_data.getLong("total_complaints");
+                            total_complaints += 1;
+                            user_document.update("total_complaints", total_complaints);
+                        }
+                    });
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
