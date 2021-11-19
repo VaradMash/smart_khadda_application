@@ -154,7 +154,10 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                                 {
                                     for(DocumentSnapshot document : result)
                                     {
-                                        complaints_list.add(document.getData());
+                                        if (document.get("complaint_locality").equals(locality))
+                                        {
+                                            complaints_list.add(document.getData());
+                                        }
                                     }
                                     Log.d("Debug", String.valueOf(complaints_list.size()));
                                 }
