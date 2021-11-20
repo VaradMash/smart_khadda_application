@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 //        } catch (Exception e) {
 
         try {
+            pbMainActivity.setVisibility(View.VISIBLE);
             tinyDB = new TinyDB(getApplicationContext());
             String phone = "+91" + tinyDB.getString("userPhoneNumber");
             DocumentReference user_document = FirebaseFirestore.getInstance()
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
                                 startActivity(intent);
                             }
+                            pbMainActivity.setVisibility(View.GONE);
                             MainActivity.this.finish();
                         }
                     });

@@ -152,7 +152,6 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                                 QuerySnapshot result = task.getResult();
                                 if(result.isEmpty())
                                 {
-                                    Toast.makeText(getApplicationContext(), "No active complaints found !", Toast.LENGTH_SHORT).show();
                                     String message = "No active complaints found !";
                                     showNotification(message);
                                 }
