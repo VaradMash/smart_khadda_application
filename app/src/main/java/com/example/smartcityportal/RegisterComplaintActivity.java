@@ -345,7 +345,8 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()) {
-                                                        Toast.makeText(RegisterComplaintActivity.this, "Your complaint with id " + document_uid + " has been registered!", Toast.LENGTH_SHORT).show();
+                                                        String message = "Your complaint with id " + document_uid + " has been registered!";
+                                                        showNotification(message);
                                                         incrementUserTotalComplaints ();
                                                     }
                                                     else
@@ -397,6 +398,32 @@ public class RegisterComplaintActivity extends AppCompatActivity {
         }
     }
 
+    private void showNotification(String message)
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Show confirmation message
+         *  Output  :   None
+         */
+        AlertDialog.Builder alert_dialog = new AlertDialog.Builder(RegisterComplaintActivity.this);
+        alert_dialog.setTitle("Confirmation");
+        View dialog_view = getLayoutInflater().inflate(R.layout.notification_dialog, null);
+        Button btnOk = dialog_view.findViewById(R.id.btnOk);
+        TextView tvNotificationMessage = dialog_view.findViewById(R.id.tvNotificationMessage);
+        alert_dialog.setView(dialog_view);
+        AlertDialog alertDialog = alert_dialog.create();
+        alert_dialog.setCancelable(false);
+
+        tvNotificationMessage.setText(message);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
     @Override
     public void onBackPressed() {
         /*
@@ -405,7 +432,6 @@ public class RegisterComplaintActivity extends AppCompatActivity {
          *  Output  :   Destroy app conditionally
          */
         AlertDialog.Builder alert_dialog = new AlertDialog.Builder(RegisterComplaintActivity.this);
-        alert_dialog.setTitle("Confirm Exit");
         View dialog_view = getLayoutInflater().inflate(R.layout.exit_dialog, null);
         Button btnExit = (Button)dialog_view.findViewById(R.id.btnExit);
         Button btnCancel = (Button)dialog_view.findViewById(R.id.btnCancel);

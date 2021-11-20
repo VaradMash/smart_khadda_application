@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -152,18 +153,29 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                                 if(result.isEmpty())
                                 {
                                     Toast.makeText(getApplicationContext(), "No active complaints found !", Toast.LENGTH_SHORT).show();
+                                    String message = "No active complaints found !";
+                                    showNotification(message);
                                 }
                                 else
                                 {
+                                    int count = 0;
                                     for(DocumentSnapshot document : result)
                                     {
                                         if (document.get("complaint_locality").equals(locality))
                                         {
+                                            count += 1;
                                             complaints_list.add(document.getData());
                                         }
                                     }
-                                    ComplaintElement adapter = new ComplaintElement(AdminComplaintsActivity.this, complaints_list, "admin");
-                                    complaintsListViewAdmin.setAdapter(adapter);
+                                    if (count == 0) {
+                                        String message = "No active complaints found !";
+                                        showNotification(message);
+                                    }
+                                    else
+                                    {
+                                        ComplaintElement adapter = new ComplaintElement(AdminComplaintsActivity.this, complaints_list, "admin");
+                                        complaintsListViewAdmin.setAdapter(adapter);
+                                    }
                                 }
                                 pbAdminComplaints.setVisibility(View.GONE);
                             }
@@ -179,6 +191,32 @@ public class AdminComplaintsActivity extends AppCompatActivity {
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void showNotification(String message)
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Show confirmation message
+         *  Output  :   None
+         */
+        Log.d("Debug", "Called for notification");
+        AlertDialog.Builder alert_dialog = new AlertDialog.Builder(AdminComplaintsActivity.this);
+        View dialog_view = getLayoutInflater().inflate(R.layout.notification_dialog, null);
+        Button btnOk = dialog_view.findViewById(R.id.btnOk);
+        TextView tvNotificationMessage = dialog_view.findViewById(R.id.tvNotificationMessage);
+        alert_dialog.setView(dialog_view);
+        AlertDialog alertDialog = alert_dialog.create();
+        alert_dialog.setCancelable(false);
+
+        tvNotificationMessage.setText(message);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override

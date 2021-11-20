@@ -177,17 +177,44 @@ public class AdminViewComplaint extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful())
                         {
-                            Toast.makeText(getApplicationContext(), "Complaint with ID " + complaint_uid + " marked as completed ! !", Toast.LENGTH_SHORT).show();
+                            String message = "Complaint with ID " + complaint_uid + " marked as completed !";
+                            Toast.makeText(AdminViewComplaint.this, message, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MyComplaintsActivity.class);
                             startActivity(intent);
                             AdminViewComplaint.this.finish();
                         }
                         else
                         {
-                            Toast.makeText(AdminViewComplaint.this, "Could not remove complaint!\nPlease try again later!", Toast.LENGTH_SHORT).show();
+                            String message = "Could not remove complaint!\nPlease try again later!";
+                            showNotification(message);
                         }
                     }
                 });
+    }
+
+    private void showNotification(String message)
+    {
+        /*
+         *  Input   :   None
+         *  Utility :   Show confirmation message
+         *  Output  :   None
+         */
+        AlertDialog.Builder alert_dialog = new AlertDialog.Builder(AdminViewComplaint.this);
+        View dialog_view = getLayoutInflater().inflate(R.layout.notification_dialog, null);
+        Button btnOk = dialog_view.findViewById(R.id.btnOk);
+        TextView tvNotificationMessage = dialog_view.findViewById(R.id.tvNotificationMessage);
+        alert_dialog.setView(dialog_view);
+        AlertDialog alertDialog = alert_dialog.create();
+        alert_dialog.setCancelable(false);
+
+        tvNotificationMessage.setText(message);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
