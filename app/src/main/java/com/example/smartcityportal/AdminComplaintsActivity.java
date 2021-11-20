@@ -66,8 +66,9 @@ public class AdminComplaintsActivity extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.adminMyProfileMenuItem:
-                intent = new Intent(getApplicationContext(), MyProfileActivity.class);
+                intent = new Intent(getApplicationContext(), AdminMyProfileActivity.class);
                 startActivity(intent);
+                AdminComplaintsActivity.this.finish();
                 break;
             case R.id.adminLogOutMenuItem:
                 mAuth.signOut();

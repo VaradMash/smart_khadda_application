@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_500"
-    tools:context=".UserViewComplaint">
+    tools:context=".AdminViewComplaint">
 
     <ProgressBar
         android:id="@+id/pbAdminViewComplaint"
@@ -107,9 +107,9 @@
                     android:layout_marginTop="15dp"
                     android:layout_gravity="center_horizontal"
                     android:text="Contact Complainant"
-                    android:onClick="contactComplainant"
                     android:textColor="@color/black"
                     android:backgroundTint="#FFC107"
+                    android:onClick="contactComplainant"
                     app:icon="@drawable/icon_email"
                     app:iconTint="@color/black"
                     app:cornerRadius="50dp"/>

@@ -82,7 +82,7 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
                 }
                 else if (user_type.equals("admin"))
                 {
-                    intent = new Intent(context.getApplicationContext(), AdminComplaintsActivity.class);
+                    intent = new Intent(context.getApplicationContext(), AdminViewComplaint.class);
                 }
                 intent.putExtra("complaint_uid", complaint_details.get("complaint_uid").toString());
                 context.startActivity(intent);
