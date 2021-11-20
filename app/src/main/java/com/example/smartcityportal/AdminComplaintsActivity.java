@@ -12,9 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -199,7 +197,6 @@ public class AdminComplaintsActivity extends AppCompatActivity {
          *  Utility :   Show confirmation message
          *  Output  :   None
          */
-        Log.d("Debug", "Called for notification");
         AlertDialog.Builder alert_dialog = new AlertDialog.Builder(AdminComplaintsActivity.this);
         View dialog_view = getLayoutInflater().inflate(R.layout.notification_dialog, null);
         Button btnOk = dialog_view.findViewById(R.id.btnOk);

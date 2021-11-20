@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -25,18 +24,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user;
     private ProgressBar pbMainActivity;
     public void onGetStartedPressed(View view) {
-//        try {
-//            tinyDB = new TinyDB(getApplicationContext());
-//            if (tinyDB.getBoolean("userIsLoggedIn")) {
-//                Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-//                startActivity(intent);
-//            }
-//            else {
-//                Intent intent = new Intent(getApplicationContext(), RegisterScreenActivity.class);
-//                startActivity(intent);
-//            }
-//        } catch (Exception e) {
-
         try {
             pbMainActivity.setVisibility(View.VISIBLE);
             tinyDB = new TinyDB(getApplicationContext());
@@ -77,15 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
-
-//        try {
-//            tinyDB = new TinyDB(getApplicationContext());
-//            if (tinyDB.getBoolean("userIsLoggedIn")) {
-//                Intent intent = new Intent(getApplicationContext(), RegisterComplaintActivity.class);
-//                startActivity(intent);
-//            }
-//        } catch (Exception e) {}
-
         pbMainActivity = findViewById(R.id.pbMainActivity);
 
         mAuth = FirebaseAuth.getInstance();
@@ -124,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else
                                 {
-                                    Log.d("Debug", task.getException().toString());
                                     Toast.makeText(MainActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
                                     pbMainActivity.setVisibility(View.GONE);
                                 }

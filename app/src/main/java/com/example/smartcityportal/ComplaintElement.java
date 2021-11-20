@@ -2,10 +2,8 @@ package com.example.smartcityportal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
@@ -38,7 +35,6 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        Log.d("Debug", String.valueOf(position));
         @SuppressLint({"ViewHolder", "InflateParams"})
         View complaintElementView = inflater.inflate(R.layout.complaint_element, null, true);
         TextView tvComplainDate = complaintElementView.findViewById(R.id.tvComplaintDate);
