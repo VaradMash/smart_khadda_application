@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class AdminComplaintsActivity extends AppCompatActivity {
     private ProgressBar pbAdminComplaints;
     private TinyDB tinyDB;
     private CollectionReference complaint_data;
+    private ListView complaintsListViewAdmin;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,6 +85,7 @@ public class AdminComplaintsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_complaints);
 
         mAuth = FirebaseAuth.getInstance();
+        complaintsListViewAdmin = (ListView)findViewById(R.id.complaintsListViewAdmin);
 
         // Capture locality
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
@@ -125,13 +128,12 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                 });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void renderComplaints()
+    {
         /*
          *  Input   :   None
-         *  Utility :   Get relevant documents for the active complaints of current user.
-         *  Output  :   Render records on screen.
+         *  Utility :   Render complaints based on locality on the screen.
+         *  Output  :   None
          */
         try
         {
@@ -159,7 +161,8 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                                             complaints_list.add(document.getData());
                                         }
                                     }
-                                    Log.d("Debug", String.valueOf(complaints_list.size()));
+                                    ComplaintElement adapter = new ComplaintElement(AdminComplaintsActivity.this, complaints_list);
+                                    complaintsListViewAdmin.setAdapter(adapter);
                                 }
                                 pbAdminComplaints.setVisibility(View.GONE);
                             }
@@ -175,16 +178,6 @@ public class AdminComplaintsActivity extends AppCompatActivity {
         {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    private void renderComplaints()
-    {
-        /*
-         *  Input   :   None
-         *  Utility :   Render complaints based on locality on the screen.
-         *  Output  :   None
-         */
     }
 
     @Override
