@@ -24,12 +24,14 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
 
     private List<Map<String, Object>> complaintList;
     private Activity context;
+    private String user_type;
 
-    public ComplaintElement(Activity context, List<Map<String, Object>> complaintList)
+    public ComplaintElement(Activity context, List<Map<String, Object>> complaintList, String user_type)
     {
         super(context, R.layout.complaint_element, complaintList);
         this.complaintList = complaintList;
         this.context = context;
+        this.user_type = user_type;
     }
 
     @NonNull
@@ -47,6 +49,7 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
         tvComplainDate.setText(date);
         tvComplaintLocation.setText(location);
         Button btnLocate = complaintElementView.findViewById(R.id.btnLocate);
+        Button btnViewComplaint = complaintElementView.findViewById(R.id.btnViewComplaint);
 
         btnLocate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +63,27 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
                 String longitude = String.valueOf(complaint_details.get("long"));
                 String url = "geo:" + lat + "," + longitude + "?z=zoom";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(intent);
+            }
+        });
+
+        btnViewComplaint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                 *  Input   :   None
+                 *  Utility :   Launch view complaint activity based on user type.
+                 *  Output  :   View complaint activity launch.
+                 */
+                Intent intent = null;
+                if(user_type.equals("user"))
+                {
+                    intent = new Intent(context.getApplicationContext(), UserViewComplaint.class);
+                }
+                else if (user_type.equals("admin"))
+                {
+                    intent = new Intent(context.getApplicationContext(), AdminComplaintsActivity.class);
+                }
                 context.startActivity(intent);
             }
         });

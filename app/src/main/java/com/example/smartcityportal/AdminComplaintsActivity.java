@@ -161,7 +161,7 @@ public class AdminComplaintsActivity extends AppCompatActivity {
                                             complaints_list.add(document.getData());
                                         }
                                     }
-                                    ComplaintElement adapter = new ComplaintElement(AdminComplaintsActivity.this, complaints_list);
+                                    ComplaintElement adapter = new ComplaintElement(AdminComplaintsActivity.this, complaints_list, "admin");
                                     complaintsListViewAdmin.setAdapter(adapter);
                                 }
                                 pbAdminComplaints.setVisibility(View.GONE);

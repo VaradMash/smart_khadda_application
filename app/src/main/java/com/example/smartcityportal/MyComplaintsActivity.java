@@ -83,7 +83,7 @@ public class MyComplaintsActivity extends AppCompatActivity {
                                             user_active_complaints.add(document.getData());
                                         }
                                     }
-                                    ComplaintElement adapter = new ComplaintElement(MyComplaintsActivity.this, user_active_complaints);
+                                    ComplaintElement adapter = new ComplaintElement(MyComplaintsActivity.this, user_active_complaints, "user");
                                     myComplaintsListView.setAdapter(adapter);
                                     Log.d("Debug", String.valueOf(user_active_complaints.size()));
                                 }
