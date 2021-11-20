@@ -179,7 +179,7 @@ public class AdminViewComplaint extends AppCompatActivity {
                         {
                             String message = "Complaint with ID " + complaint_uid + " marked as completed !";
                             Toast.makeText(AdminViewComplaint.this, message, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), MyComplaintsActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), AdminComplaintsActivity.class);
                             startActivity(intent);
                             AdminViewComplaint.this.finish();
                         }
