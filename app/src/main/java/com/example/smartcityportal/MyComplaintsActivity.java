@@ -3,6 +3,7 @@ package com.example.smartcityportal;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -82,6 +83,8 @@ public class MyComplaintsActivity extends AppCompatActivity {
                                             user_active_complaints.add(document.getData());
                                         }
                                     }
+                                    ComplaintElement adapter = new ComplaintElement(MyComplaintsActivity.this, user_active_complaints);
+                                    myComplaintsListView.setAdapter(adapter);
                                     Log.d("Debug", String.valueOf(user_active_complaints.size()));
                                 }
                                 pbMyComplaints.setVisibility(View.GONE);

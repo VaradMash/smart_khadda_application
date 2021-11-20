@@ -332,6 +332,7 @@ public class RegisterComplaintActivity extends AppCompatActivity {
                                     complaint_data.put("complaint_locality", locality);
                                     complaint_data.put("complaint_uid", document_uid);
                                     complaint_data.put("complaint_status", "active");
+                                    complaint_data.put("complaint_address", address);
                                     complaint_data.put("lat", current_location.getLatitude());
                                     complaint_data.put("long", current_location.getLongitude());
                                     complaint_data.put("complaint_image", "complaint_images/" + file_name);
