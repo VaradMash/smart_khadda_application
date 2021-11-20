@@ -58,7 +58,7 @@ public class MyComplaintsActivity extends AppCompatActivity {
          */
         try
         {
-
+            user_active_complaints.removeAll(user_active_complaints);
             pbMyComplaints.setVisibility(View.VISIBLE);
             String phone = "+91" + tinyDB.getString("userPhoneNumber");
             complaint_data

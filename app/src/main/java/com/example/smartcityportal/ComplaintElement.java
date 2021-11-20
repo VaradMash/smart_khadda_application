@@ -84,7 +84,9 @@ public class ComplaintElement extends ArrayAdapter<Map<String, Object>>{
                 {
                     intent = new Intent(context.getApplicationContext(), AdminComplaintsActivity.class);
                 }
+                intent.putExtra("complaint_uid", complaint_details.get("complaint_uid").toString());
                 context.startActivity(intent);
+                context.finish();
             }
         });
         return complaintElementView;
