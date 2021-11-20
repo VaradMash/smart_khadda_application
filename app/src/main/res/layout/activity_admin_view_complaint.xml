@@ -4,6 +4,125 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminViewComplaint">
+    android:background="@color/purple_500"
+    tools:context=".UserViewComplaint">
+
+    <ProgressBar
+        android:id="@+id/pbAdminViewComplaint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/complaintImageViewAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/round_edge_background"
+                android:src="@drawable/icon_image"/>
+
+            <TextView
+                android:id="@+id/tvAdminComplaintDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="25dp"
+                android:text="Date : "
+                android:textSize="18sp"
+                android:fontFamily="@font/merriweather"/>
+
+            <TextView
+                android:id="@+id/tvAdminComplaintLocality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="30dp"
+                android:text="Locality : "
+                android:textSize="18sp"
+                android:fontFamily="@font/merriweather"/>
+
+            <TextView
+                android:id="@+id/tvAdminComplaintDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginTop="30dp"
+                android:text="Description : "
+                android:textSize="18sp"
+                android:fontFamily="@font/merriweather"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnAdminLocate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:text="Locate"
+                    android:backgroundTint="#FFC107"
+                    android:textColor="@color/black"
+                    android:onClick="locateComplaintAdmin"
+                    app:icon="@drawable/icon_location"
+                    app:cornerRadius="50dp"
+                    app:iconTint="@color/black"/>
+
+                <Button
+                    android:id="@+id/btnMarkAsCompleted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Mark as resolved"
+                    android:onClick="confirmDeleteAdmin"
+                    android:textColor="@color/black"
+                    android:backgroundTint="#FFC107"
+                    app:icon="@drawable/icon_tick"
+                    app:iconTint="@color/black"
+                    app:cornerRadius="50dp"/>
+
+                <Button
+                    android:id="@+id/btnEmailComplainant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Contact Complainant"
+                    android:onClick="contactComplainant"
+                    android:textColor="@color/black"
+                    android:backgroundTint="#FFC107"
+                    app:icon="@drawable/icon_email"
+                    app:iconTint="@color/black"
+                    app:cornerRadius="50dp"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

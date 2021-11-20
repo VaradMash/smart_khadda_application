@@ -192,6 +192,8 @@ public class UserViewComplaint extends AppCompatActivity {
          *  Utility :   Navigate to My complaints activity for user.
          *  Output  :   Activity launch.
          */
+        Intent intent = new Intent(getApplicationContext(), MyComplaintsActivity.class);
+        startActivity(intent);
         UserViewComplaint.this.finish();
     }
 }
